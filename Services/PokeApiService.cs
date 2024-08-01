@@ -15,7 +15,7 @@ public class PokeApiService : IPokeApiService
     {
         _pokeClient = new PokeApiClient();
     }
-    
+
     // <summary>
     // Get a list 10 random pokemons
     // </summary>
@@ -26,7 +26,8 @@ public class PokeApiService : IPokeApiService
 
         var apiResponse = await _pokeClient.GetNamedResourcePageAsync<Pokemon>(_pokemonLimit, startFrom);
 
-        var pokemons = await Task.WhenAll(apiResponse.Results.Select(async pokemon => {
+        var pokemons = await Task.WhenAll(apiResponse.Results.Select(async pokemon =>
+        {
             var pokemonDetails = await _pokeClient.GetResourceAsync<Pokemon>(pokemon.Name);
 
             return new PokemonModel
@@ -47,20 +48,24 @@ public class PokeApiService : IPokeApiService
     // </summary>
     public async Task<PokemonModel> GetPokemonByIdAsync(int id)
     {
-        var pokemonDetails = await _pokeClient.GetResourceAsync<Pokemon>(id);
+        try
+        {
+            var pokemonDetails = await _pokeClient.GetResourceAsync<Pokemon>(id);
 
-        if(pokemonDetails == null)
+            return new PokemonModel
+            {
+                Id = pokemonDetails.Id,
+                Name = pokemonDetails.Name,
+                Evolutions = await GetEvolutionsAsync(pokemonDetails),
+                Sprite = pokemonDetails.Sprites.FrontDefault,
+            };
+
+        }
+        catch
         {
             throw ApiException.NotFound("Pokemon not found");
         }
 
-        return new PokemonModel
-        {
-            Id = pokemonDetails.Id,
-            Name = pokemonDetails.Name,
-            Evolutions = await GetEvolutionsAsync(pokemonDetails),
-            Sprite = pokemonDetails.Sprites.FrontDefault,
-        };
     }
 
     // <summary>
@@ -71,7 +76,7 @@ public class PokeApiService : IPokeApiService
     {
         var species = await _pokeClient.GetResourceAsync(pokemonDetails.Species);
         var evolutionChain = await _pokeClient.GetResourceAsync(species.EvolutionChain);
-        
+
         return GetEvolutionChainNames(evolutionChain.Chain).SkipWhile(name => name != pokemonDetails.Name).Skip(1).ToArray();
     }
 

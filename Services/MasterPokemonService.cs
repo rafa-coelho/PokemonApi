@@ -38,6 +38,20 @@ public class MasterPokemonService : IMasterPokemonService
     }
 
     // <summary>
+    // Get a master pokemon by id
+    // if the master id does not exist, it will throw an exception
+    // </summary>
+    public async Task<MasterPokemonModel> GetMasterPokemonByIdAsync(int masterId)
+    {
+        var masterPokemon = await _context.MasterPokemons.FindAsync(masterId);
+
+        if (masterPokemon == null)
+            throw ApiException.NotFound("Master pokemon not found");
+
+        return masterPokemon;
+    }
+
+    // <summary>
     // Capture a pokemon by master id
     // if the pokemon is not captured, it will capture the pokemon otherwise it will capture the pokemon
     // if the pokemon does not exist, it will throw an exception
@@ -53,15 +67,6 @@ public class MasterPokemonService : IMasterPokemonService
     // if the master id does not have any captured pokemon, it will return an empty list
     // </summary>
     public Task<MasterPokemonModel> GetCapturedPokemonByMasterIdAsync(int masterId)
-    {
-        throw new NotImplementedException();
-    }
-
-    // <summary>
-    // Get a master pokemon by id
-    // if the master id does not exist, it will throw an exception
-    // </summary>
-    public Task<MasterPokemonModel> GetMasterPokemonByIdAsync(int masterId)
     {
         throw new NotImplementedException();
     }

@@ -96,7 +96,7 @@ public class MasterPokemonService : IMasterPokemonService
         return masterPokemon.CapturedPokemons.Select(x => new PokemonDto(x.Id, x.Name, x.Evolutions, x.Sprite)).ToList();
     }
 
-    private async Task<PokemonModel> GetPokemonEntityAsync(PokemonModel pokemon)
+    private async Task<PokemonModel> GetPokemonEntityAsync(PokemonDto pokemon)
     {
         var existingPokemon = await _context.Pokemons.FirstOrDefaultAsync(x => x.Id == pokemon.Id);
         

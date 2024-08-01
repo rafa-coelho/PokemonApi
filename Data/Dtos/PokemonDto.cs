@@ -1,3 +1,3 @@
 namespace Pokedex.Data.Dtos;
 
-public record PokemonDto(int id, string Name, string[] Evolutions, string Sprite);
+public record PokemonDto(int Id, string Name, string[] Evolutions, string Sprite);

@@ -1,6 +1,6 @@
 using PokeApiNet;
 using Pokedex.AspNetCore.Exceptions;
-using Pokedex.Data.Model;
+using Pokedex.Data.Dtos;
 using Pokedex.Services.Interfaces;
 
 namespace Pokedex.Services;
@@ -19,7 +19,7 @@ public class PokeApiService : IPokeApiService
     // <summary>
     // Get a list 10 random pokemons
     // </summary>
-    public async Task<List<PokemonModel>> GetRandomPokemonsAsync()
+    public async Task<List<PokemonDto>> GetRandomPokemonsAsync()
     {
         var random = new Random();
         var startFrom = random.Next(1, _maxPokemonId);
@@ -30,13 +30,7 @@ public class PokeApiService : IPokeApiService
         {
             var pokemonDetails = await _pokeClient.GetResourceAsync<Pokemon>(pokemon.Name);
 
-            return new PokemonModel
-            {
-                Id = pokemonDetails.Id,
-                Name = pokemonDetails.Name,
-                Evolutions = await GetEvolutionsAsync(pokemonDetails),
-                Sprite = pokemonDetails.Sprites.FrontDefault,
-            };
+            return new PokemonDto(pokemonDetails.Id, pokemonDetails.Name, await GetEvolutionsAsync(pokemonDetails), pokemonDetails.Sprites.FrontDefault);
         }));
 
 
@@ -46,19 +40,13 @@ public class PokeApiService : IPokeApiService
     // <summary>
     // Get a pokemon by id
     // </summary>
-    public async Task<PokemonModel> GetPokemonByIdAsync(int id)
+    public async Task<PokemonDto> GetPokemonByIdAsync(int id)
     {
         try
         {
             var pokemonDetails = await _pokeClient.GetResourceAsync<Pokemon>(id);
 
-            return new PokemonModel
-            {
-                Id = pokemonDetails.Id,
-                Name = pokemonDetails.Name,
-                Evolutions = await GetEvolutionsAsync(pokemonDetails),
-                Sprite = pokemonDetails.Sprites.FrontDefault,
-            };
+            return new PokemonDto(pokemonDetails.Id, pokemonDetails.Name, await GetEvolutionsAsync(pokemonDetails), pokemonDetails.Sprites.FrontDefault);
 
         }
         catch

@@ -50,7 +50,7 @@ public class MasterPokemonService : IMasterPokemonService
         if (masterPokemon == null)
             throw ApiException.NotFound("Master pokemon not found");
 
-        return new MasterPokemonDto(masterPokemon.Name, masterPokemon.Age, masterPokemon.Cpf);
+        return new MasterPokemonDto(masterPokemon.Name, masterPokemon.Age, masterPokemon.Cpf, masterId);
     }
 
     // <summary>

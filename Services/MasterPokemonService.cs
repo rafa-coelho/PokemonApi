@@ -72,7 +72,7 @@ public class MasterPokemonService : IMasterPokemonService
         if (capturedPokemon != null)
             throw ApiException.BadRequest("Pokemon already captured");
 
-        var pokemonEntity = await GerPokemonEntityAsync(pokemon);
+        var pokemonEntity = await GetPokemonEntityAsync(pokemon);
 
         masterPokemon.CapturedPokemons.Add(pokemonEntity);
 
@@ -93,29 +93,21 @@ public class MasterPokemonService : IMasterPokemonService
 
     private async Task<PokemonModel> GetPokemonEntityAsync(PokemonModel pokemon)
     {
-        var pokemonExists = await _context.Pokemons.AnyAsync(x => x.Id == pokemon.Id);
+        var existingPokemon = await _context.Pokemons.FirstOrDefaultAsync(x => x.Id == pokemon.Id);
+        
+        if (existingPokemon != null)
+            return existingPokemon;
 
-        if (!pokemonExists)
+        var pokemonEntity = new PokemonModel
         {
-            var result = await _context.Pokemons.AddAsync(new PokemonModel
-            {
-                Id = pokemon.Id,
-                Name = pokemon.Name,
-                Evolutions = pokemon.Evolutions,
-                Sprite = pokemon.Sprite
-            });
+            Id = pokemon.Id,
+            Name = pokemon.Name,
+            Evolutions = pokemon.Evolutions,
+            Sprite = pokemon.Sprite
+        };
 
-            await _context.SaveChangesAsync();
+        await _context.Pokemons.AddAsync(pokemonEntity);
 
-            return new PokemonModel
-            {
-                Id = result.Entity.Id,
-                Name = result.Entity.Name,
-                Evolutions = result.Entity.Evolutions,
-                Sprite = result.Entity.Sprite
-            };
-        }
-
-        return pokemon;
+        return pokemonEntity;
     }
 }

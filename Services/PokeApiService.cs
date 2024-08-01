@@ -58,6 +58,10 @@ public class PokeApiService : IPokeApiService
         };
     }
 
+    // <summary>
+    // Get evolutions of a pokemon.
+    // It will only return the names of next the evolutions
+    // </summary>
     private async Task<string[]> GetEvolutionsAsync(Pokemon pokemonDetails)
     {
         if (_evolutions.ContainsKey(pokemonDetails.Id))
@@ -75,6 +79,9 @@ public class PokeApiService : IPokeApiService
         return evolutionNames;
     }
 
+    // <summary>
+    // Get all the evolution chain names
+    // </summary>
     private List<string> GetEvolutionChainNames(ChainLink chain)
     {
         var evolutionNames = new List<string>();

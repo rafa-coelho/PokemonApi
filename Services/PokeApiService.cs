@@ -30,7 +30,15 @@ public class PokeApiService : IPokeApiService
         {
             var pokemonDetails = await _pokeClient.GetResourceAsync<Pokemon>(pokemon.Name);
 
-            return new PokemonDto(pokemonDetails.Id, pokemonDetails.Name, await GetEvolutionsAsync(pokemonDetails), pokemonDetails.Sprites.FrontDefault);
+            var evolutionsTask = GetEvolutionsAsync(pokemonDetails);
+            var spriteTask = GetBase64StringFromImageUrlAsync(pokemonDetails.Sprites.FrontDefault);
+
+            await Task.WhenAll(evolutionsTask, spriteTask);
+
+            return new PokemonDto(pokemonDetails.Id,
+                pokemonDetails.Name,
+                await evolutionsTask,
+                await spriteTask);
         }));
 
 
@@ -46,7 +54,15 @@ public class PokeApiService : IPokeApiService
         {
             var pokemonDetails = await _pokeClient.GetResourceAsync<Pokemon>(id);
 
-            return new PokemonDto(pokemonDetails.Id, pokemonDetails.Name, await GetEvolutionsAsync(pokemonDetails), pokemonDetails.Sprites.FrontDefault);
+            var evolutionsTask = GetEvolutionsAsync(pokemonDetails);
+            var spriteTask = GetBase64StringFromImageUrlAsync(pokemonDetails.Sprites.FrontDefault);
+
+            await Task.WhenAll(evolutionsTask, spriteTask);
+
+            return new PokemonDto(pokemonDetails.Id,
+                pokemonDetails.Name,
+                await evolutionsTask,
+                await spriteTask);
 
         }
         catch
@@ -89,5 +105,23 @@ public class PokeApiService : IPokeApiService
         }
 
         return evolutionNames;
+    }
+
+
+    // <summary>
+    // Get a pokemon sprite in base64 format
+    // </summary>
+    private static async Task<string> GetBase64StringFromImageUrlAsync(string url)
+    {
+        using (HttpClient client = new HttpClient())
+        {
+            var response = await client.GetAsync(url);
+            if (response.IsSuccessStatusCode)
+            {
+                var bytes = await response.Content.ReadAsByteArrayAsync();
+                return Convert.ToBase64String(bytes);
+            }
+        }
+        return null;
     }
 }

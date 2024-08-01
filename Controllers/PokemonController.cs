@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Pokedex.AspNetCore.Exceptions;
 using Pokedex.Services.Interfaces;
 
 namespace Pokedex.Controllers;
@@ -23,7 +24,14 @@ public class PokemonController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetPokemonById(int id)
     {
-        var pokemon = await _pokeApiService.GetPokemonByIdAsync(id);
-        return Ok(pokemon);
+        try
+        {
+            var pokemon = await _pokeApiService.GetPokemonByIdAsync(id);
+            return Ok(pokemon);
+        }
+        catch (ApiException ex)
+        {
+            return StatusCode(ex.StatusCode, new { Message = ex.Message });
+        }
     }
 }

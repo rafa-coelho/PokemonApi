@@ -1,4 +1,5 @@
 using PokeApiNet;
+using Pokedex.AspNetCore.Exceptions;
 using Pokedex.Data.Model;
 using Pokedex.Services.Interfaces;
 
@@ -48,6 +49,11 @@ public class PokeApiService : IPokeApiService
     public async Task<PokemonModel> GetPokemonByIdAsync(int id)
     {
         var pokemonDetails = await _pokeClient.GetResourceAsync<Pokemon>(id);
+
+        if(pokemonDetails == null)
+        {
+            throw ApiException.NotFound("Pokemon not found");
+        }
 
         return new PokemonModel
         {

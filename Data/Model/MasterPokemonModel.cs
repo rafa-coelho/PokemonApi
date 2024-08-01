@@ -1,5 +1,5 @@
 namespace Pokedex.Data.Model;
-public class MasterPokemon
+public class MasterPokemonModel
 {
     public int Id { get; set; }
     public string Name { get; set; }

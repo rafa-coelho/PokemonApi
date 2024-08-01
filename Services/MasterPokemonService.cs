@@ -1,6 +1,9 @@
 using Pokedex.Data.Model;
 using Pokedex.Data;
 using Pokedex.Services.Interfaces;
+using Pokedex.Data.Dtos;
+using Microsoft.EntityFrameworkCore;
+using Pokedex.AspNetCore.Exceptions;
 
 namespace Pokedex.Services;
 public class MasterPokemonService : IMasterPokemonService
@@ -13,19 +16,33 @@ public class MasterPokemonService : IMasterPokemonService
     }
 
     // <summary>
+    // Create a master pokemon
+    // </summary>
+    public async Task<MasterPokemonModel> CreateMasterPokemonAsync(CreateMasterDto masterPokemon)
+    {
+        var cpfExists = await _context.MasterPokemons.AnyAsync(x => x.Cpf == masterPokemon.Cpf);
+
+        if (cpfExists)
+            throw ApiException.BadRequest("Cpf is already in use");
+
+        var result = await _context.MasterPokemons.AddAsync(new MasterPokemonModel
+        {
+            Name = masterPokemon.Name,
+            Age = masterPokemon.Age,
+            Cpf = masterPokemon.Cpf
+        });
+        
+        await _context.SaveChangesAsync();
+
+        return result.Entity;
+    }
+
+    // <summary>
     // Capture a pokemon by master id
     // if the pokemon is not captured, it will capture the pokemon otherwise it will capture the pokemon
     // if the pokemon does not exist, it will throw an exception
     // </summary>
     public Task<List<MasterPokemonModel>> CapturePokemonsAsync(int pokemonId, int masterId)
-    {
-        throw new NotImplementedException();
-    }
-
-    // <summary>
-    // Create a master pokemon
-    // </summary>
-    public Task<MasterPokemonModel> CreateMasterPokemonAsync(MasterPokemonModel masterPokemon)
     {
         throw new NotImplementedException();
     }

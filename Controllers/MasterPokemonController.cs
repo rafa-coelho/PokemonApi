@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Pokedex.AspNetCore.Exceptions;
+using Pokedex.Data.Dtos;
 using Pokedex.Data.Model;
 using Pokedex.Services.Interfaces;
 
@@ -17,7 +18,7 @@ public class MasterPokemonController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateMasterPokemon(MasterPokemonModel masterPokemon)
+    public async Task<IActionResult> CreateMasterPokemon(CreateMasterDto masterPokemon)
     {
         try
         {

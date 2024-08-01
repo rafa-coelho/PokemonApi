@@ -20,6 +20,7 @@ using var db = builder
 db.Database.Migrate();
 
 builder.Services.AddScoped<IPokeApiService, PokeApiService>();
+builder.Services.AddScoped<IMasterPokemonService, MasterPokemonService>();
 
 builder.Services.AddControllers();
 

@@ -47,12 +47,12 @@ public class MasterPokemonController : ControllerBase
         }
     }
 
-    [HttpPost("{masterId}/capture")]
-    public async Task<IActionResult> CapturePokemon(int pokemonId, int masterId)
+    [HttpPost("capture")]
+    public async Task<IActionResult> CapturePokemon([FromBody] CapturePokemonDto capturePokemonDto)
     {
         try
         {
-            var capturedPokemon = await _service.CapturePokemonsAsync(pokemonId, masterId);
+            var capturedPokemon = await _service.CapturePokemonsAsync(capturePokemonDto.PokemonId, capturePokemonDto.MasterId);
             
             return Ok(capturedPokemon);
         }
@@ -60,7 +60,6 @@ public class MasterPokemonController : ControllerBase
         {
             return StatusCode(ex.StatusCode, new { Message = ex.Message });
         }
-        
     }
 
     [HttpGet("{masterId}/captured")]

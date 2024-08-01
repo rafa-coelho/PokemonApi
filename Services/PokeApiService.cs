@@ -10,7 +10,6 @@ public class PokeApiService : IPokeApiService
     private readonly PokeApiClient _pokeClient;
     private readonly int _maxPokemonId = 1025;
     private readonly int _pokemonLimit = 10;
-    private Dictionary<int, string[]> _evolutions = new Dictionary<int, string[]>();
 
     public PokeApiService()
     {
@@ -70,19 +69,10 @@ public class PokeApiService : IPokeApiService
     // </summary>
     private async Task<string[]> GetEvolutionsAsync(Pokemon pokemonDetails)
     {
-        if (_evolutions.ContainsKey(pokemonDetails.Id))
-        {
-            return _evolutions[pokemonDetails.Id];
-        }
-
         var species = await _pokeClient.GetResourceAsync(pokemonDetails.Species);
         var evolutionChain = await _pokeClient.GetResourceAsync(species.EvolutionChain);
         
-        var evolutionNames = GetEvolutionChainNames(evolutionChain.Chain).SkipWhile(name => name != pokemonDetails.Name).Skip(1).ToArray();
-
-        _evolutions.Add(pokemonDetails.Id, evolutionNames);
-
-        return evolutionNames;
+        return GetEvolutionChainNames(evolutionChain.Chain).SkipWhile(name => name != pokemonDetails.Name).Skip(1).ToArray();
     }
 
     // <summary>

@@ -86,9 +86,14 @@ public class MasterPokemonService : IMasterPokemonService
     // if the master id does not exist, it will throw an exception
     // if the master id does not have any captured pokemon, it will return an empty list
     // </summary>
-    public Task<List<PokemonDto>> GetCapturedPokemonByMasterIdAsync(int masterId)
+    public async Task<List<PokemonDto>> GetCapturedPokemonByMasterIdAsync(int masterId)
     {
-        throw new NotImplementedException();
+        var masterPokemon = await _context.MasterPokemons.Include(x => x.CapturedPokemons).FirstOrDefaultAsync(x => x.Id == masterId);
+
+        if (masterPokemon == null)
+            throw ApiException.NotFound("Master pokemon not found");
+
+        return masterPokemon.CapturedPokemons.Select(x => new PokemonDto(x.Id, x.Name, x.Evolutions, x.Sprite)).ToList();
     }
 
     private async Task<PokemonModel> GetPokemonEntityAsync(PokemonModel pokemon)

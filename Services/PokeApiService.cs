@@ -42,6 +42,9 @@ public class PokeApiService : IPokeApiService
         return pokemons.ToList();
     }
 
+    // <summary>
+    // Get a pokemon by id
+    // </summary>
     public async Task<PokemonModel> GetPokemonByIdAsync(int id)
     {
         var pokemonDetails = await _pokeClient.GetResourceAsync<Pokemon>(id);

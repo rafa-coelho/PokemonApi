@@ -57,7 +57,7 @@ public class PokeApiService : IPokeApiService
         var species = await _pokeClient.GetResourceAsync(pokemonDetails.Species);
         var evolutionChain = await _pokeClient.GetResourceAsync(species.EvolutionChain);
         
-        var evolutionNames = GetEvolutionChainNames(evolutionChain.Chain).ToArray();
+        var evolutionNames = GetEvolutionChainNames(evolutionChain.Chain).SkipWhile(name => name != pokemonDetails.Name).Skip(1).ToArray();
 
         _evolutions.Add(pokemonDetails.Id, evolutionNames);
 

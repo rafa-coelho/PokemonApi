@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Pokedex.Data.Model;
 
-namespace PokemonApp.Data;
+namespace Pokedex.Data;
 public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

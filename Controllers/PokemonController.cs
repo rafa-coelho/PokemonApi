@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Pokedex.Services.Interfaces;
 
-namespace PokemonApp.Controllers;
+namespace Pokedex.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class PokemonController : ControllerBase

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Pokedex.Services;
 using Pokedex.Services.Interfaces;
-using PokemonApp.Data;
+using Pokedex.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

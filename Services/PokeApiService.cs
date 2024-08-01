@@ -42,9 +42,17 @@ public class PokeApiService : IPokeApiService
         return pokemons.ToList();
     }
 
-    Task<PokemonModel> IPokeApiService.GetPokemonByIdAsync(int id)
+    public async Task<PokemonModel> GetPokemonByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var pokemonDetails = await _pokeClient.GetResourceAsync<Pokemon>(id);
+
+        return new PokemonModel
+        {
+            Id = pokemonDetails.Id,
+            Name = pokemonDetails.Name,
+            Evolutions = await GetEvolutionsAsync(pokemonDetails),
+            Sprite = pokemonDetails.Sprites.FrontDefault,
+        };
     }
 
     private async Task<string[]> GetEvolutionsAsync(Pokemon pokemonDetails)

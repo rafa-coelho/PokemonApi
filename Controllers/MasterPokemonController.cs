@@ -18,7 +18,7 @@ public class MasterPokemonController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateMasterPokemon(CreateMasterDto masterPokemon)
+    public async Task<IActionResult> CreateMasterPokemon(MasterPokemonDto masterPokemon)
     {
         try
         {

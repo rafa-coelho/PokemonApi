@@ -33,33 +33,60 @@ namespace PokemonApi.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Evolutions = table.Column<string>(type: "TEXT", nullable: false),
-                    Sprite = table.Column<string>(type: "TEXT", nullable: false),
-                    MasterPokemonModelId = table.Column<int>(type: "INTEGER", nullable: true)
+                    Sprite = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Pokemons", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MasterPokemonPokemons",
+                columns: table => new
+                {
+                    MasterPokemonModelId = table.Column<int>(type: "INTEGER", nullable: false),
+                    PokemonModelId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MasterPokemonPokemons", x => new { x.MasterPokemonModelId, x.PokemonModelId });
                     table.ForeignKey(
-                        name: "FK_Pokemons_MasterPokemons_MasterPokemonModelId",
+                        name: "FK_MasterPokemonPokemons_MasterPokemons_MasterPokemonModelId",
                         column: x => x.MasterPokemonModelId,
                         principalTable: "MasterPokemons",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MasterPokemonPokemons_Pokemons_PokemonModelId",
+                        column: x => x.PokemonModelId,
+                        principalTable: "Pokemons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pokemons_MasterPokemonModelId",
-                table: "Pokemons",
-                column: "MasterPokemonModelId");
+                name: "IX_MasterPokemonPokemons_PokemonModelId",
+                table: "MasterPokemonPokemons",
+                column: "PokemonModelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MasterPokemons_Cpf",
+                table: "MasterPokemons",
+                column: "Cpf",
+                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Pokemons");
+                name: "MasterPokemonPokemons");
 
             migrationBuilder.DropTable(
                 name: "MasterPokemons");
+
+            migrationBuilder.DropTable(
+                name: "Pokemons");
         }
     }
 }

@@ -5,4 +5,5 @@ public class PokemonModel
     public string Name { get; set; }
     public string[] Evolutions { get; set; }
     public string Sprite { get; set; }
+    public List<MasterPokemonModel> Masters { get; set; } = [];
 }
